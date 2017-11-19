@@ -6,7 +6,7 @@
 To start a new project using Stencil, clone this repo to a new directory:
 
 ```bash
-git clone https://github.com/ionic-team/stencil-starter.git stencil-todo-app
+git clone https://github.com/Borjagodoy/stencil-todo-app.git
 cd stencil-todo-app
 git remote rm origin
 ```
