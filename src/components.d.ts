@@ -39,6 +39,38 @@ declare global {
 
 
 import {
+  MyAvatar as MyAvatar
+} from './components/my-avatar/my-avatar';
+
+declare global {
+  interface HTMLMyAvatarElement extends MyAvatar, HTMLElement {
+  }
+  var HTMLMyAvatarElement: {
+    prototype: HTMLMyAvatarElement;
+    new (): HTMLMyAvatarElement;
+  };
+  interface HTMLElementTagNameMap {
+    "my-avatar": HTMLMyAvatarElement;
+  }
+  interface ElementTagNameMap {
+    "my-avatar": HTMLMyAvatarElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "my-avatar": JSXElements.MyAvatarAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface MyAvatarAttributes extends HTMLAttributes {
+      
+        userImage?: string,
+        userName?: string
+    }
+  }
+}
+
+
+import {
   MyInputTask as MyInputTask
 } from './components/my-input-task/my-input-task';
 

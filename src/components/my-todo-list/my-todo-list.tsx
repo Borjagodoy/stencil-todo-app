@@ -8,6 +8,10 @@ export class MyTodoList {
   @Element() todoListElement: any;
   @State() firebaseElement: any;
   @State() last: string;
+  @State() userId: string;
+  @State() userImage: string;
+  @State() userName: string;
+  @State() loged: string = 'Login';
   
   @State() todoList: Array<any> = [];
  
@@ -19,13 +23,23 @@ export class MyTodoList {
     }
   @Listen ('response')
   setList(event: CustomEvent) {
+    this.todoList = [];
     if(event.detail){
-        this.todoList = [
-        ...event.detail
-        ];
+        this.todoList = [...event.detail]
       } else {
         this.todoList = [];
       }
+  }
+  @Listen ('loginSuccess')
+  getLoginData(event: CustomEvent) {
+    console.log(event.detail.user);
+    this.todoList = [];
+    const userData = event.detail.user;
+    this.userImage = userData.photoURL;
+    this.userName = userData.displayName;
+    this.userId = userData.uid
+    this.firebaseElement.getItem(`locations/${this.userId}`);
+    this.loged = 'Logout';
   }
   addNewItem(task) {
     if(!this.includeTask(task)) {
@@ -33,24 +47,30 @@ export class MyTodoList {
         ...this.todoList,
         task
         ];
-      this.firebaseElement.setItem(`locations`, this.todoList)
+      this.firebaseElement.setItem(`locations/${this.userId}`, this.todoList)
     }
   }
   componentDidLoad() {
     this.firebaseElement = this.todoListElement.querySelector('firebase-stencil');
-    this.firebaseElement.getItem(`locations`);
+    this.firebaseElement.getItem(`locations/${this.userId}`);
   }
   includeTask(task) {
     return this.todoList.find((taskItem) => taskItem.taskName === task.taskName )
   }
   preshCheckbox(todo) {
     const index = this.todoList.findIndex((item) => item.taskName ===  todo.taskName )
-    this.firebaseElement.setItem(`locations/${index}/isSelected`, !todo.isSelected)
+    this.firebaseElement.setItem(`locations/${this.userId}/${index}`, todo)
   }
   removeItem(todo) {
+    debugger;
     const index = this.todoList.findIndex((item) => item.taskName ===  todo.taskName )
+    if(index !== -1)
     this.todoList.splice(index, 1)
-    this.firebaseElement.setItem(`locations`, this.todoList)
+    console.log(index);
+    this.firebaseElement.setItem(`locations/${this.userId}`, this.todoList)
+  }
+  login() {
+    this.firebaseElement.googleLogin();
   }
   render() {
       const config={
@@ -62,6 +82,8 @@ export class MyTodoList {
         messagingSenderId: "481793810270"
       }
       return[
+        <button onClick={ () => this.login() }>{this.loged}</button>,
+        <my-avatar userName={this.userName} userImage={this.userImage}></my-avatar>,
         <firebase-stencil config={config}></firebase-stencil>,
         <my-input-task></my-input-task>,
           <ul>

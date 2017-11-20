@@ -11,6 +11,7 @@ export class FirebaseStencil {
   @State() ref: any;
   
   @Event() response: EventEmitter;
+  @Event() loginSuccess: EventEmitter;
   
   componentWillLoad() {
     this.firebase = window['firebase'];
@@ -35,6 +36,20 @@ export class FirebaseStencil {
   @Method()
   removeItem(id) {
     this.ref.child(id).remove();
+  }
+  @Method()
+  googleLogin() {
+    var provider = new this.firebase.auth.GoogleAuthProvider();
+    this.firebase.auth().signInWithPopup(provider).then( (result) => {
+      this.loginSuccess.emit(result);
+      console.log('login', result)
+    }).catch(function(error) {
+      console.log('error', error)
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      var email = error.email;
+      var credential = error.credential;
+    });
   }
   render() {
       return null;

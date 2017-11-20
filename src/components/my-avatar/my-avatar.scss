@@ -1,0 +1,29 @@
+/* CONFIG */
+
+$avatar-image-size: 90px;
+$avatar-border-width-ratio: 0.07;
+$avatar-border-width: $avatar-image-size * $avatar-border-width-ratio;
+$avatar-label-text-size: 28px;
+
+/* AVATAR */
+
+.avatar { 
+  display: inline-block;
+}
+  
+.avatar__image {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto 10px;
+  border-radius: $avatar-image-size / 2;
+  box-shadow: 0 0 0 $avatar-border-width white, 
+              0 0 ($avatar-border-width * 1.7) 1px black,
+              0 ($avatar-border-width + 3px) 5px rgba(0, 0, 0, 0.2);
+  width: $avatar-image-size - ($avatar-border-width * 2);
+  height: $avatar-image-size - ($avatar-border-width * 2);
+}
+  
+.avatar__label {
+  text-align: center;
+  font-size: $avatar-label-text-size;
+}
