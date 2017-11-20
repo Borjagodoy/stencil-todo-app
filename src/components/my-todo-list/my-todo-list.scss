@@ -60,7 +60,17 @@ h1 {
 	text-align: center;
 	margin: 0 0 2em;
 }
+.icon {
+	width:20px; 
+	height:20px;
+	cursor: pointer;
+}
 
+.item {
+	width: 100%;
+	display: flex !important;
+	justify-content: space-between;
+}
 .container {
 	position: relative;
 	max-width: 40rem;
@@ -174,7 +184,6 @@ fieldset {
 	.bar {
 		position: relative;
 		border-bottom: ($mf-font-size / 16) solid $mf-border-color;
-		display: block;
 		
 		&::before {
 			content: '';
@@ -191,7 +200,6 @@ fieldset {
 
 	input,
 	textarea {
-		display: block;
 		background: none;
 		padding: $mf-spacer $mf-spacer ($mf-spacer / 2);
 		font-size: $mf-font-size;
@@ -260,7 +268,6 @@ fieldset {
 		padding-left: $mf-checkbox-gap;
 		text-align: left;
 		color: $mf-input-color;
-		display: block;
 	}
 
 	input {
@@ -279,7 +286,6 @@ fieldset {
 		top: $mf-radio-margin;
 		left: $mf-radio-margin;
 		cursor: pointer;
-		display: block;
 		font-size: $mf-font-size;
 		user-select: none;
 		color: $mf-border-color;
@@ -346,7 +352,6 @@ fieldset {
 			height: 0;
 			width: ($mf-font-size * 0.2);
 			background-color: $mf-focus-color;
-			display: block;
 			transform-origin: left top;
 			border-radius: ($mf-font-size / 4);
 			content: '';
@@ -452,7 +457,6 @@ fieldset {
 		width: 30vh;
 		height: 30vh;
 		border-radius: 50%;
-		display: block;
 		top: 50%;
 		left: 50%;
 		z-index: 0;

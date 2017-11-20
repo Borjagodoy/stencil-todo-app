@@ -14,24 +14,28 @@ export class MyTodoList {
   @Listen ('todoCompleted')
     todoCompletedHandler(event: CustomEvent) {
       const task = {taskName: event.detail, isSelected: false};
+      console.log(task)
       this.addNewItem(task);
     }
   @Listen ('response')
-    setList(event: CustomEvent) {
-      if(event.detail){
-          this.todoList = [
-          ...event.detail
-          ];
-        } else {
-          this.todoList = [];
-        }
-    }
-    addNewItem(task) {
-      if(!this.includeTask(task)) {
-        task.id = this.todoList.length;
-        this.firebaseElement.setItem(`locations/${this.todoList.length}`, task)
+  setList(event: CustomEvent) {
+    if(event.detail){
+        this.todoList = [
+        ...event.detail
+        ];
+      } else {
+        this.todoList = [];
       }
+  }
+  addNewItem(task) {
+    if(!this.includeTask(task)) {
+       this.todoList = [
+        ...this.todoList,
+        task
+        ];
+      this.firebaseElement.setItem(`locations`, this.todoList)
     }
+  }
   componentDidLoad() {
     this.firebaseElement = this.todoListElement.querySelector('firebase-stencil');
     this.firebaseElement.getItem(`locations`);
@@ -40,26 +44,33 @@ export class MyTodoList {
     return this.todoList.find((taskItem) => taskItem.taskName === task.taskName )
   }
   preshCheckbox(todo) {
-    console.log('event', todo);
-    console.log()
-    todo.isSelected = !todo.isSelected;
-    this.updateItem(todo);
+    const index = this.todoList.findIndex((item) => item.taskName ===  todo.taskName )
+    this.firebaseElement.setItem(`locations/${index}/isSelected`, !todo.isSelected)
   }
-  updateItem(task) {
-    console.log(`locations/${task.id}`)
-    this.firebaseElement.setItem(`locations/${task.id}/isSelected`, task.isSelected)
+  removeItem(todo) {
+    const index = this.todoList.findIndex((item) => item.taskName ===  todo.taskName )
+    this.todoList.splice(index, 1)
+    this.firebaseElement.setItem(`locations`, this.todoList)
   }
   render() {
+      const config={
+        apiKey: "AIzaSyBC8Yk2kJEKZwSEAVyE-y6ZjhZFE8bNs4A",
+        authDomain: "caceresrealbus.firebaseapp.com",
+        databaseURL: "https://caceresrealbus.firebaseio.com",
+        projectId: "caceresrealbus",
+        storageBucket: "caceresrealbus.appspot.com",
+        messagingSenderId: "481793810270"
+      }
       return[
-        <firebase-stencil></firebase-stencil>,
+        <firebase-stencil config={config}></firebase-stencil>,
         <my-input-task></my-input-task>,
           <ul>
             {this.todoList.map((todo) => 
-                <div class="checkbox">
+                <div class="checkbox item">
                   <label>
-                    <input type="checkbox" onChange={ (event) => this.preshCheckbox(todo) } checked={todo.isSelected}/><i class="helper"></i>                  {todo.taskName} 
-
+                    <input type="checkbox" onClick={ (event) => this.preshCheckbox(todo) } checked={todo.isSelected}/><i class="helper"></i>                  {todo.taskName} 
                   </label>
+                  <img class="icon" onClick={ () => this.removeItem(todo) } src="/assets/icon/delete_icon.png" alt="borrar"/>
                 </div>
               )
             }
