@@ -1,11 +1,12 @@
-import { Component, Listen, State } from '@stencil/core';
-
+import { Component, Prop, Element, Listen, State } from '@stencil/core';
 
 @Component({
   tag: 'my-todo-list',
   styleUrl: 'my-todo-list.scss'
 })
 export class MyTodoList {
+  @Element() todoListElement: any;
+  @State() firebaseElement: any;
   @State() last: string;
   
   @State() todoList: Array<any> = [];
@@ -15,14 +16,26 @@ export class MyTodoList {
       const task = {taskName: event.detail, isSelected: false};
       this.addNewItem(task);
     }
+  @Listen ('response')
+    setList(event: CustomEvent) {
+      if(event.detail){
+          this.todoList = [
+          ...event.detail
+          ];
+        } else {
+          this.todoList = [];
+        }
+    }
     addNewItem(task) {
       if(!this.includeTask(task)) {
-        this.todoList = [
-        ...this.todoList,
-        task
-        ];
+        task.id = this.todoList.length;
+        this.firebaseElement.setItem(`locations/${this.todoList.length}`, task)
       }
     }
+  componentDidLoad() {
+    this.firebaseElement = this.todoListElement.querySelector('firebase-stencil');
+    this.firebaseElement.getItem(`locations`);
+  }
   includeTask(task) {
     return this.todoList.find((taskItem) => taskItem.taskName === task.taskName )
   }
@@ -33,15 +46,12 @@ export class MyTodoList {
     this.updateItem(todo);
   }
   updateItem(task) {
-    const index = this.todoList.findIndex((taskList) => taskList.taskName === task.taskName);
-
-    if(index !== -1) {
-      this.todoList[index] = task;
-       this.todoList = [...this.todoList];
-    }
+    console.log(`locations/${task.id}`)
+    this.firebaseElement.setItem(`locations/${task.id}/isSelected`, task.isSelected)
   }
   render() {
       return[
+        <firebase-stencil></firebase-stencil>,
         <my-input-task></my-input-task>,
           <ul>
             {this.todoList.map((todo) => 

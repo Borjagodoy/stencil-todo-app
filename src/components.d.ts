@@ -8,6 +8,37 @@ import '@stencil/router';
 
 
 import {
+  FirebaseStencil as FirebaseStencil
+} from './components/firebase-stencil/firebase-stencil';
+
+declare global {
+  interface HTMLFirebaseStencilElement extends FirebaseStencil, HTMLElement {
+  }
+  var HTMLFirebaseStencilElement: {
+    prototype: HTMLFirebaseStencilElement;
+    new (): HTMLFirebaseStencilElement;
+  };
+  interface HTMLElementTagNameMap {
+    "firebase-stencil": HTMLFirebaseStencilElement;
+  }
+  interface ElementTagNameMap {
+    "firebase-stencil": HTMLFirebaseStencilElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "firebase-stencil": JSXElements.FirebaseStencilAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface FirebaseStencilAttributes extends HTMLAttributes {
+      
+        config?: Object
+    }
+  }
+}
+
+
+import {
   MyInputTask as MyInputTask
 } from './components/my-input-task/my-input-task';
 
